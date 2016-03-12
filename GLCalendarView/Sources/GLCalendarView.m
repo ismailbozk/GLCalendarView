@@ -31,12 +31,32 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
 @property (weak, nonatomic) IBOutlet GLCalendarMonthCoverView *monthCoverView;
 @property (weak, nonatomic) IBOutlet UIView *magnifierContainer;
 @property (weak, nonatomic) IBOutlet UIImageView *maginifierContentView;
+
+@property (strong, nonatomic) NSDateFormatter *dateFormatter;
+
 @end
 
 @implementation GLCalendarView
 
 @synthesize firstDate = _firstDate;
 @synthesize lastDate = _lastDate;
+
+#pragma mark - Getters
+
+- (NSDateFormatter *)dateFormatter
+{
+    if (_dateFormatter == nil)
+    {
+        _dateFormatter = [NSDateFormatter new];
+        _dateFormatter.dateStyle = NSDateFormatterMediumStyle;
+        _dateFormatter.timeStyle = NSDateFormatterNoStyle;
+        _dateFormatter.doesRelativeDateFormatting = YES;
+    }
+    _dateFormatter.locale = self.calendar.locale;
+    return _dateFormatter;
+}
+
+#pragma mark - Lifecycle
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -68,13 +88,13 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
 - (void)setup
 {
     self.collectionView.decelerationRate = UIScrollViewDecelerationRateFast;
-
+    
     self.ranges = [NSMutableArray array];
     
     self.calendar = [GLDateUtils calendar];
     
     self.monthCoverView.hidden = YES;
-
+    
     self.collectionView.dataSource = self;
     self.collectionView.delegate = self;
     [self.collectionView registerNib:[UINib nibWithNibName:@"GLCalendarDayCell" bundle:[NSBundle bundleForClass:self.class]] forCellWithReuseIdentifier:CELL_REUSE_IDENTIFIER];
@@ -248,6 +268,7 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
         enlargePoint = ENLARGE_NONE;
     }
     [cell setDate:date range:[self selectedRangeForDate:date] cellPosition:cellPosition enlargePoint:enlargePoint];
+    cell.dateFormatter = self.dateFormatter;
     
     return cell;
 }
@@ -457,14 +478,14 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
         [self reloadCellOnDate:self.rangeUnderEdit.endDate];
         return;
     }
-
+    
     CGPoint location = [recognizer locationInView:self.collectionView];
     if (location.y <= self.collectionView.contentOffset.y) {
         return;
     }
     
     NSDate *date = [self dateAtLocation:location];
-
+    
     if ([GLDateUtils date:self.rangeUnderEdit.endDate isSameDayAsDate:date]) {
         return;
     }
@@ -491,7 +512,7 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
 
 - (void)showMagnifierAboveDate:(NSDate *)date
 {
-    if (!self.showMagnifier) {
+    if (!self.showMaginfier) {
         return;
     }
     GLCalendarDayCell *cell = (GLCalendarDayCell *)[self collectionView:self.collectionView cellForItemAtIndexPath:[self indexPathForDate:date]];
@@ -517,7 +538,7 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
 
 - (void)hideMagnifier
 {
-    if (!self.showMagnifier) {
+    if (!self.showMaginfier) {
         return;
     }
     self.magnifierContainer.hidden = YES;

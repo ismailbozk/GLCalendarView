@@ -16,7 +16,6 @@
 #define UIColorFromRGB(rgbValue) \
 [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
-
 @interface GLCalendarDayCell()
 @property (weak, nonatomic) IBOutlet UILabel *dayLabel;
 @property (weak, nonatomic) IBOutlet UILabel *monthLabel;
@@ -28,9 +27,14 @@
 @property (nonatomic) ENLARGE_POINT enlargePoint;
 @property (nonatomic) BOOL inEdit;
 @property (nonatomic) CGFloat containerPadding;
+
+@property (nonatomic, strong) NSDateFormatter *todayFormatter;
+@property (nonatomic, strong) NSDateFormatter *monthFormatter;
 @end
 
 @implementation GLCalendarDayCell
+
+#pragma mark - Lifecycle
 
 - (void)awakeFromNib
 {
@@ -78,13 +82,13 @@
 
 - (void)updateUI
 {
-//    NSLog(@"update ui: %@ %d", [GLDateUtils descriptionForDate:self.date], _enlargePoint);
-
+    //    NSLog(@"update ui: %@ %d", [GLDateUtils descriptionForDate:self.date], _enlargePoint);
+    
     NSDateComponents *components = [[GLDateUtils calendar] components:NSCalendarUnitDay|NSCalendarUnitMonth fromDate:self.date];
     
     NSInteger day = components.day;
     NSInteger month = components.month;
-
+    
     // month background color
     if (month % 2 == 0) {
         self.backgroundCover.backgroundColor = self.evenMonthBackgroundColor;
@@ -109,15 +113,11 @@
         self.backgroundCover.paddingLeft = 0;
         self.backgroundCover.paddingRight = 0;
     }
-        
+    
     // day label and month label
     if ([self isToday]) {
         self.monthLabel.textColor = [UIColor whiteColor];
-        NSDateFormatter *todayFormatter = [[NSDateFormatter alloc] init];
-        todayFormatter.dateStyle = NSDateFormatterMediumStyle;
-        todayFormatter.timeStyle = NSDateFormatterNoStyle;
-        todayFormatter.doesRelativeDateFormatting = YES;
-        [self setMonthLabelText:[todayFormatter stringFromDate:[NSDate date]]];
+        [self setMonthLabelText:[self.dateFormatter stringFromDate:[NSDate date]]];
         self.dayLabel.textColor = [UIColor whiteColor];
         [self setTodayLabelText:[NSString stringWithFormat:@"%ld", (long)day]];
         self.backgroundCover.isToday = YES;
@@ -186,23 +186,34 @@
 
 - (void)setDayLabelText:(NSString *)text
 {
-    self.dayLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:self.dayLabelAttributes];
+    if (text != nil)
+    {
+        self.dayLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:self.dayLabelAttributes];
+    }
 }
 
 - (void)setFutureDayLabelText:(NSString *)text
 {
-    self.dayLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:self.futureDayLabelAttributes];
+    if (text != nil)
+    {
+        self.dayLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:self.futureDayLabelAttributes];
+    }
 }
 
 
 - (void)setTodayLabelText:(NSString *)text
 {
-    self.dayLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:self.todayLabelAttributes];
+    if (text != nil)
+    {
+        self.dayLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:self.todayLabelAttributes];
+    }
 }
 
 - (void)setMonthLabelText:(NSString *)text
 {
-    self.monthLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:self.monthLabelAttributes];
+    if (text != nil)    {
+        self.monthLabel.attributedText = [[NSAttributedString alloc] initWithString:text attributes:self.monthLabelAttributes];
+    }
 }
 
 
@@ -219,7 +230,7 @@
 static NSArray *months;
 - (NSString *)monthText:(NSInteger)month {
     if (!months) {
-        months = [[[[NSDateFormatter alloc] init] shortStandaloneMonthSymbols] valueForKeyPath:@"capitalizedString"];
+        months = [[self.dateFormatter shortStandaloneMonthSymbols] valueForKeyPath:@"capitalizedString"];
     }
     return [months objectAtIndex:(month - 1)];
 }

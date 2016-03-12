@@ -45,5 +45,8 @@ typedef NS_ENUM(NSInteger, RANGE_DISPLAY_MODE) {
 @property (nonatomic, readonly) NSDate *date;
 @property (nonatomic, weak, readonly) GLCalendarDateRange *range;
 
+/// Must be set from outside. Because NSdateFormatter is expensive to initialize.
+@property (nonatomic, strong) NSDateFormatter *dateFormatter;
+
 - (void)setDate:(NSDate *)date range:(GLCalendarDateRange *)range cellPosition:(CELL_POSITION)cellPosition enlargePoint:(ENLARGE_POINT)enlargePoint;
 @end
