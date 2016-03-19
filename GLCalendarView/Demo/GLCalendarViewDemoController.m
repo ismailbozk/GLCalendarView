@@ -75,7 +75,7 @@
     self.rangeUnderEdit = range;
 }
 
-- (void)calenderView:(GLCalendarView *)calendarView finishEditRange:(GLCalendarDateRange *)range continueEditing:(BOOL)continueEditing
+- (void)calenderView:(GLCalendarView *)calendarView finishEditRange:(GLCalendarDateRange *)range continueEditing:(BOOL)continueEditing selectedDate:(NSDate *)date
 {
     NSLog(@"finish edit range: %@", range);
     self.rangeUnderEdit = nil;
