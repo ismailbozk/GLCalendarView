@@ -246,6 +246,7 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
     GLCalendarDayCell *cell = (GLCalendarDayCell *)[collectionView dequeueReusableCellWithReuseIdentifier:CELL_REUSE_IDENTIFIER forIndexPath:indexPath];
+    cell.dateFormatter = self.dateFormatter;
     
     CELL_POSITION cellPosition;
     ENLARGE_POINT enlargePoint;
@@ -268,7 +269,6 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
         enlargePoint = ENLARGE_NONE;
     }
     [cell setDate:date range:[self selectedRangeForDate:date] cellPosition:cellPosition enlargePoint:enlargePoint];
-    cell.dateFormatter = self.dateFormatter;
     
     return cell;
 }
