@@ -302,12 +302,12 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
         }
         // click a different range
         if (self.rangeUnderEdit && range != self.rangeUnderEdit) {
-            [self finishEditRange:self.rangeUnderEdit continueEditing:YES bySelectingDate:date];
+            [self finishEditRange:self.rangeUnderEdit continueEditing:YES];
         }
         [self beginToEditRange:range];
     } else {
         if (self.rangeUnderEdit) {
-            [self finishEditRange:self.rangeUnderEdit continueEditing:NO bySelectingDate:date];
+            [self finishEditRange:self.rangeUnderEdit continueEditing:NO];
         } else {
             BOOL canAdd = [self.delegate calenderView:self canAddRangeWithBeginDate:date];
             if (canAdd) {
@@ -315,6 +315,11 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
                 [self addRange:rangeToAdd];
             }
         }
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(calenderView:didSelectDate:)])
+    {
+        [self.delegate calenderView:self didSelectDate:date];
     }
 }
 
@@ -386,11 +391,11 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
     [self.delegate calenderView:self beginToEditRange:range];
 }
 
-- (void)finishEditRange:(GLCalendarDateRange *)range continueEditing:(BOOL)continueEditing bySelectingDate:(NSDate *)selectedDate
+- (void)finishEditRange:(GLCalendarDateRange *)range continueEditing:(BOOL)continueEditing
 {
     self.rangeUnderEdit.inEdit = NO;
     [self reloadFromBeginDate:self.rangeUnderEdit.beginDate toDate:self.rangeUnderEdit.endDate];
-    [self.delegate calenderView:self finishEditRange:self.rangeUnderEdit continueEditing:continueEditing selectedDate:selectedDate];
+    [self.delegate calenderView:self finishEditRange:self.rangeUnderEdit continueEditing:continueEditing];
     self.rangeUnderEdit = nil;
 }
 

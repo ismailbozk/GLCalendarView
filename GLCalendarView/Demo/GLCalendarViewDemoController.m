@@ -75,7 +75,7 @@
     self.rangeUnderEdit = range;
 }
 
-- (void)calenderView:(GLCalendarView *)calendarView finishEditRange:(GLCalendarDateRange *)range continueEditing:(BOOL)continueEditing selectedDate:(NSDate *)date
+- (void)calenderView:(GLCalendarView *)calendarView finishEditRange:(GLCalendarDateRange *)range continueEditing:(BOOL)continueEditing
 {
     NSLog(@"finish edit range: %@", range);
     self.rangeUnderEdit = nil;
@@ -90,6 +90,13 @@
 {
     NSLog(@"did update range: %@", range);
 }
+
+- (void)calenderView:(GLCalendarView *)calendarView didSelectDate:(NSDate *)date
+{
+    NSLog(@"did select date: %@", date);
+}
+
+#pragma mark - Actions
 
 - (IBAction)deleteButtonPressed:(id)sender
 {
