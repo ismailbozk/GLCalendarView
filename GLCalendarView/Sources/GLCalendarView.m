@@ -293,6 +293,12 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
     NSDate *date = [self dateForCellAtIndexPath:indexPath];
+    
+    if ([self.delegate respondsToSelector:@selector(calenderView:didSelectDate:)])
+    {
+        [self.delegate calenderView:self didSelectDate:date];
+    }
+    
     GLCalendarDateRange *range = [self selectedRangeForDate:date];
     
     // if click in a range
@@ -315,11 +321,6 @@ static NSString * const CELL_REUSE_IDENTIFIER = @"DayCell";
                 [self addRange:rangeToAdd];
             }
         }
-    }
-    
-    if ([self.delegate respondsToSelector:@selector(calenderView:didSelectDate:)])
-    {
-        [self.delegate calenderView:self didSelectDate:date];
     }
 }
 
