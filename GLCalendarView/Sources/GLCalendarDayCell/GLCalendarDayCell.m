@@ -16,6 +16,8 @@
 #define UIColorFromRGB(rgbValue) \
 [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
 
+static CGFloat const kGLCalendarDayCellBackgrouncCoverAdditionalPadding = 1.f;
+
 @interface GLCalendarDayCell()
 @property (weak, nonatomic) IBOutlet UILabel *dayLabel;
 @property (weak, nonatomic) IBOutlet UILabel *monthLabel;
@@ -98,18 +100,18 @@
     
     // adjust background position
     if (self.position == POSITION_LEFT_EDGE) {
-        self.backgroundCoverRight.constant = 0;
+        self.backgroundCoverRight.constant = -kGLCalendarDayCellBackgrouncCoverAdditionalPadding;
         self.backgroundCoverLeft.constant = -self.containerPadding;
         self.backgroundCover.paddingLeft = self.containerPadding;
         self.backgroundCover.paddingRight = 0;
     } else if (self.position == POSITION_RIGHT_EDGE){
         self.backgroundCoverRight.constant = -self.containerPadding;
-        self.backgroundCoverLeft.constant = 0;
+        self.backgroundCoverLeft.constant = -kGLCalendarDayCellBackgrouncCoverAdditionalPadding;
         self.backgroundCover.paddingLeft = 0;
         self.backgroundCover.paddingRight = self.containerPadding;
     } else {
-        self.backgroundCoverRight.constant = 0;
-        self.backgroundCoverLeft.constant = 0;
+        self.backgroundCoverRight.constant = -kGLCalendarDayCellBackgrouncCoverAdditionalPadding;
+        self.backgroundCoverLeft.constant = -kGLCalendarDayCellBackgrouncCoverAdditionalPadding;
         self.backgroundCover.paddingLeft = 0;
         self.backgroundCover.paddingRight = 0;
     }
